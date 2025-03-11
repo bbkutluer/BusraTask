@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  app:
+    image: busravarisli/busratask:0.0.2
+    ports:
+      - "8086:8080"
+    environment:
+      URL: "jdbc:postgresql://postgres:5432/postgres?currentSchema=urun_takip"
+      POSTGRES_USER: "busra"
+      POSTGRES_PASSWORD: "busra"
+    networks:
+      - busra-network
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:16  # ✅ Windows uyumluluğu daha iyi olabilir.
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER:postgres
+      - POSTGRES_PASSWORD:busra
+      - POSTGRES_DB:postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - busra-network
+volumes:
+  postgres_data:
+    driver: local
+networks:
+  busra-network:
+    driver: bridge

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busra-app
+  labels:
+    app: busra-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busra-app
+  template:
+    metadata:
+      labels:
+        app: busra-app
+    spec:
+      containers:
+        - name: busra-app
+          image: busravarisli/busratask:0.0.1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/postgres?currentSchema=urun_takip"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "busra"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "busra"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: busra-app
+spec:
+  selector:
+    app: busra-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
