@@ -16,16 +16,22 @@ spec:
     spec:
       containers:
         - name: busra-app
-          image: busravarisli/busratask:0.0.1
+          image: busravarisli/busratask:0.0.2
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres:5432/postgres?currentSchema=urun_takip"
             - name: SPRING_DATASOURCE_USERNAME
-              value: "busra"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
             - name: SPRING_DATASOURCE_PASSWORD
-              value: "busra"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
 
 ---
 apiVersion: v1
